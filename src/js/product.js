@@ -1,6 +1,6 @@
 import { setLocalStorage } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
-const fs = require("fs");
+// const fs = require("fs");
 let cartCollection = [];
 let topProductList = [];
 
@@ -21,9 +21,9 @@ document
   .getElementById("addToCart")
   .addEventListener("click", addToCartHandler);
 
-  export function createProductPages(itemList) {
-    itemList.forEach(item => {
-      const newItem = ` <!doctype html>
+export function createProductPages(itemList) {
+  itemList.forEach(item => {
+    const newItem = ` <!doctype html>
 
   <html lang="en">
     <head>
@@ -109,11 +109,11 @@ document
     </body>
   </html>
   `;
-      let filename  = concat(item.NameWithoutBrand, ".html");
-      fs.writeFile(filename, newItem, "utf8", (error, data) => {
+    let filename = concat(item.NameWithoutBrand, ".html");
+    fs.writeFile(filename, newItem, "utf8", (error, data) => {
       console.log("Write complete");
       console.log(error);
       console.log(data);
     });
-});
-  }
+  });
+}
