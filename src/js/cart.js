@@ -10,20 +10,31 @@ function renderCartContents() {
 }
 
 function cartItemTemplate(item) {
-  const newItem = `<li class="cart-card divider">
-  <a href="#" class="cart-card__image">
-    <img
-      src="${item.Image}"
-      alt="${item.Name}"
-    />
-  </a>
-  <a href="#">
-    <h2 class="card__name">${item.Name}</h2>
-  </a>
-  <p class="cart-card__color">${item.Colors[0].ColorName}</p>
-  <p class="cart-card__quantity">qty: 1</p>
-  <p class="cart-card__price">$${item.FinalPrice}</p>
-</li>`;
+  const newItem = `    <main class="divider">
+      <section class="product-detail">
+        <h3>The North Face</h3>
+
+        <h2 class="divider">${item.NameWithoutBrand}</h2>
+
+        <img
+          class="divider"
+          src="${item.Image}"
+          alt="${item.Alt}"
+        />
+
+        <p class="product-card__price">$${item.ListPrice}</p>
+
+        <p class="product__color">${item.Colors[0].ColorName}</p>
+
+        <p class="product__description">
+          ${item.DescriptionHtmlSimple}
+        </p>
+
+        <div class="product-detail__add">
+          <button id="addToCart" data-id="${item.Brand[0].Id}">Add to Cart</button>
+        </div>
+      </section>
+    </main>`;
 
   return newItem;
 }
