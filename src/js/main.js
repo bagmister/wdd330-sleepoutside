@@ -1,16 +1,11 @@
-const topProductList = document.querySelector(".product-list")
+import tentProductData from "../json/tents.json"
+import { createProductPages } from './product';
+import { loadTopProducts } from './product';
+import { getProducts } from './product';
 
-import { createProductPages } from './product.js';
+document.addEventListener('DOMContentLoaded', () => {
+  const tentProducts = getProducts(tentProductData);
+  createProductPages(tentProducts);
 
-async function loadProducts() {
-    const response = await fetch('products.json');
-    const products = await response.json();
-
-    const app = document.getElementById('app');
-    products.forEach(product => {
-        const card = createProductCard(product);
-        app.appendChild(card);
-    });
-}
-
-loadProducts();
+  loadTopProducts(tentProducts);
+});
