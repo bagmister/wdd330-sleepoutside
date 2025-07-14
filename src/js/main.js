@@ -1,11 +1,17 @@
 import tentProductData from "../json/tents.json"
-import { createProductPages } from './product';
+import { createProductPage } from './product';
 import { loadTopProducts } from './product';
 import { getProducts } from './product';
 
 document.addEventListener('DOMContentLoaded', () => {
   const tentProducts = getProducts(tentProductData);
-  createProductPages(tentProducts);
-
   loadTopProducts(tentProducts);
 });
+
+let productCard = document.querySelector(".product-card");
+ 
+  productCard = document.addEventListener('click', (e) => {
+    const productCardId = e.target.dataset.id;
+    createProductPage({ target: { dataset: { id: productCardId } } })
+  });
+
