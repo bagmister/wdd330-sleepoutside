@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
     card.addEventListener('click', (e) => {
 
       const target = e.target.closest('[data-id]');
-      const productId = target ? target.dataset.id : null;
+      const productId = target ? target.getAttribute('data-id') : null;
 
       if (productId) {
         createProductPage(productId);

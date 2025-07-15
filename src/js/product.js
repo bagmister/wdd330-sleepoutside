@@ -78,7 +78,7 @@ export function loadTopProducts(itemList) {
   // Create the list items for each product
   itemList.forEach(item => {
     const newProduct = `
-    <li class="product-card" data-id="${item.Id} >
+    <li class="product-card" data-id="${item.Id}" >
         <a href="product_pages/product.html">
           <img src="${item.ImageIndex}" alt="${item.Alt}" />
           <h3 class="card__brand">${item.Brand.Name}</h3>
