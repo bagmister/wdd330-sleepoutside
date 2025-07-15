@@ -1,4 +1,4 @@
-import tentProductData from "../json/tents.json"
+import tentProductData from "../json/tents.json";
 import { createProductPage } from './product';
 import { loadTopProducts } from './product';
 import { getProducts } from './product';
@@ -6,12 +6,20 @@ import { getProducts } from './product';
 document.addEventListener('DOMContentLoaded', () => {
   const tentProducts = getProducts(tentProductData);
   loadTopProducts(tentProducts);
-});
 
-let productCard = document.querySelector(".product-card");
- 
-  productCard = document.addEventListener('click', (e) => {
-    const productCardId = e.target.dataset.id;
-    createProductPage({ target: { dataset: { id: productCardId } } })
+  const productCards = document.querySelectorAll(".product-card");
+
+  productCards.forEach(card => {
+    card.addEventListener('click', (e) => {
+
+      const target = e.target.closest('[data-id]');
+      const productId = target ? target.dataset.id : null;
+
+      if (productId) {
+        createProductPage(productId);
+      } else {
+        console.error("No product found in element.");
+      }
+    });
   });
-
+});
