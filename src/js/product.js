@@ -1,94 +1,72 @@
 import { setLocalStorage } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
 
-document.querySelector(".product-page")
-let cartCollection = [];
-let topProductList = [];
+const cartCollection = [];
+const topProductList = [];
 
 const dataSource = new ProductData("tents");
 
 function addProductToCart(product) {
-  cartCollection.push(product)
+  cartCollection.push(product);
   setLocalStorage("so-cart", cartCollection);
 }
+
 async function addToCartHandler(e) {
-  const product = await dataSource.findProductById(e.target.dataset.id);
+  let product = await dataSource.findProductById(e.target.dataset.id);
   addProductToCart(product);
 }
 
-document
-  .getElementById("addToCart");
 export async function createProductPage(productId) {
-  const product = await dataSource.findProductById(productId);
+  console.log("dataSource used for create product page:", dataSource);
+  let product = await dataSource.findProductById(productId);
+  console.log("Product:", product);
   if (!product) {
     console.error("Product not found for ID:", productId);
     return;
   }
 
-  const newProductPage = `
-        <head>
-          <meta charset="UTF-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-          <title>Sleep Outside | ${product.Name}</title>
-          <link rel="stylesheet" href="../css/style.css" />
-          <script src="../js/product.js" type="module"></script>
-        </head>
-        <body>
-          <header class="divider">
-            <div class="logo">
-              <img src="/images/noun_Tent_2517.svg" alt="tent image for logo" />
-              <a href="../index.html"> Sleep<span class="highlight">Outside</span></a>
-            </div>
-            <div class="cart">
-              <a href="../cart/">
-                <!-- SVG code for cart icon -->
-              </a>
-            </div>
-          </header>
-          <main class="divider">
-            <section class="product-detail">
-              <h3>${product.Brand?.Name?.[0] || 'Brand Name'}</h3>
-              <h2 class="divider">${product.NameWithoutBrand || 'Product Name'}</h2>
-              <img class="divider" src="${product.ImageIndex || 'no image'}" alt="${product.Alt || ''}" />
-              <p class="product-card__price">$${product.FinalPrice || '0.00'}</p>
-              <p class="product__color">${product.Colors?.[0]?.ColorName || ''}</p>
-              <p class="product__description">${product.DescriptionHtmlSimple || ''}</p>
-              <div class="product-detail__add">
-                <button id="addToCart" data-id="${product.Brand?.Id?.[0] || productId}">Add to Cart</button>
-              </div>
-            </section>
-          </main>
-          <footer>© NOT a real business</footer>
-        </body>
-      </html>`;
+  let newProductPage = `
+    <h3>${product.Brand?.Name || 'Brand Name'}</h3>
+    <h2 class="divider">${product.NameWithoutBrand || 'Product Name'}</h2>
+    <img class="divider" src="../${product.ImageIndex || 'no image'}" alt="${product.Alt || ''}" />
+    <p class="product-card__price">$${product.FinalPrice || '0.00'}</p>
+    <p class="product__color">${product.Colors[0].ColorName || ''}</p>
+    <p class="product__description">${product.DescriptionHtmlSimple || ''}</p>
+    <div class="product-detail__add">
+      <button id="addToCart" data-id="${product.Id || productId}">Add to Cart</button>
+    </div>`;
 
-  // Find the product-page container in the template
-  const productPageContainer = document.querySelector(".product-page");
+  let productPageContainer = document.querySelector(".product-detail");
   if (productPageContainer) {
     productPageContainer.innerHTML = newProductPage;
+    let addToCartButton = document.getElementById("addToCart");
+    if (addToCartButton) {
+      addToCartButton.addEventListener('click', addToCartHandler);
+    } else {
+      console.error("Could not find #addToCart button.");
+    }
   } else {
-    console.error("Could not find .product-page container.");
+    console.error("Could not find .product-detail for adding product detial for the product page.");
   }
 }
 
 export function loadTopProducts(itemList) {
   console.log("item list", itemList);
-  const productList = [];
+  let productList = [];
 
-  // Create the list items for each product
   itemList.forEach(item => {
-    const newProduct = `
-    <li class="product-card" data-id="${item.Id}" >
-        <a href="product_pages/product.html">
-          <img src="${item.ImageIndex}" alt="${item.Alt}" />
-          <h3 class="card__brand">${item.Brand.Name}</h3>
-          <h2 class="card__name">${item.NameWithoutBrand}</h2>
-          <p class="product-card__price">$${item.FinalPrice}</p>
-          <div class="product-detail__add">
-            <button class="addToCartButton" data-id="${item.Id}">Add to Cart</button>
-          </div>
-        </a>
-      </li>
+    let newProduct = `
+    <li class="product-card" data-id="${item.Id}">
+      <a href="./product_pages/product.html?id=${item.Id}">
+        <img src="${item.ImageIndex}" alt="${item.Alt}" />
+        <h3 class="card__brand">${item.Brand.Name}</h3>
+        <h2 class="card__name">${item.NameWithoutBrand}</h2>
+        <p class="product-card__price">$${item.FinalPrice}</p>
+        <div class="product-detail__add">
+          <button class="addToCartButton" data-id="${item.Id}">Add to Cart</button>
+        </div>
+      </a>
+    </li>
     `;
     productList.push(newProduct);
   });
@@ -97,13 +75,13 @@ export function loadTopProducts(itemList) {
   if (productListContainer) {
     productListContainer.innerHTML = productList.join('');
   } else {
-    console.log("Could not find .product-list container.");
+    console.log("Could not find .product-list to update.");
   }
 
   if (productListContainer) {
     productListContainer.addEventListener('click', (e) => {
       if (e.target && e.target.classList.contains('addToCartButton')) {
-        const productId = e.target.dataset.id;
+        let productId = e.target.dataset.id;
         addToCartHandler({ target: { dataset: { id: productId } } });
       }
     });
@@ -111,11 +89,18 @@ export function loadTopProducts(itemList) {
 }
 
 export function getProducts(dataSource) {
-  console.log("getProducts", dataSource)
   let productArray = [];
   dataSource.forEach(item => {
-    productArray.push(item)
+    productArray.push(item);
   });
-  console.log("productArray", productArray)
-  return productArray
+  return productArray;
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  let urlParams = new URLSearchParams(window.location.search);
+  let productId = urlParams.get('id');
+  if (productId) {
+    createProductPage(productId);
+  }
+});
