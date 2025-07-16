@@ -26,12 +26,12 @@ export async function createProductPage(productId) {
   }
 
   let newProductPage = `
-    <h3>${product.Brand?.Name || 'Brand Name'}</h3>
-    <h2 class="divider">${product.NameWithoutBrand || 'Product Name'}</h2>
-    <img class="divider" src="../${product.ImageIndex || 'no image'}" alt="${product.Alt || ''}" />
-    <p class="product-card__price">$${product.FinalPrice || '0.00'}</p>
-    <p class="product__color">${product.Colors[0].ColorName || ''}</p>
-    <p class="product__description">${product.DescriptionHtmlSimple || ''}</p>
+    <h3>${product.Brand?.Name || "Brand Name"}</h3>
+    <h2 class="divider">${product.NameWithoutBrand || "Product Name"}</h2>
+    <img class="divider" src="../${product.ImageIndex || "no image"}" alt="${product.Alt || ""}" />
+    <p class="product-card__price">$${product.FinalPrice || "0.00"}</p>
+    <p class="product__color">${product.Colors[0].ColorName || ""}</p>
+    <p class="product__description">${product.DescriptionHtmlSimple || ""}</p>
     <div class="product-detail__add">
       <button id="addToCart" data-id="${product.Id || productId}">Add to Cart</button>
     </div>`;
@@ -41,7 +41,7 @@ export async function createProductPage(productId) {
     productPageContainer.innerHTML = newProductPage;
     let addToCartButton = document.getElementById("addToCart");
     if (addToCartButton) {
-      addToCartButton.addEventListener('click', addToCartHandler);
+      addToCartButton.addEventListener("click", addToCartHandler);
     } else {
       console.error("Could not find #addToCart button.");
     }
@@ -51,10 +51,12 @@ export async function createProductPage(productId) {
 }
 
 export function loadTopProducts(itemList) {
-  console.log("item list", itemList);
   let productList = [];
 
   itemList.forEach(item => {
+    if (item.Id === "989CG" || item.Id === "880RT") {
+      return
+    }
     let newProduct = `
     <li class="product-card" data-id="${item.Id}">
       <a href="./product_pages/product.html?id=${item.Id}">
@@ -71,16 +73,16 @@ export function loadTopProducts(itemList) {
     productList.push(newProduct);
   });
 
-  const productListContainer = document.querySelector('.product-list');
+  const productListContainer = document.querySelector(".product-list");
   if (productListContainer) {
-    productListContainer.innerHTML = productList.join('');
+    productListContainer.innerHTML = productList.join("");
   } else {
     console.log("Could not find .product-list to update.");
   }
 
   if (productListContainer) {
-    productListContainer.addEventListener('click', (e) => {
-      if (e.target && e.target.classList.contains('addToCartButton')) {
+    productListContainer.addEventListener("click", (e) => {
+      if (e.target && e.target.classList.contains("addToCartButton")) {
         let productId = e.target.dataset.id;
         addToCartHandler({ target: { dataset: { id: productId } } });
       }
@@ -97,9 +99,9 @@ export function getProducts(dataSource) {
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   let urlParams = new URLSearchParams(window.location.search);
-  let productId = urlParams.get('id');
+  let productId = urlParams.get("id");
   if (productId) {
     createProductPage(productId);
   }
