@@ -1,5 +1,8 @@
 import { setLocalStorage } from "./utils.mjs";
 import ProductData from "./ProductData.mjs";
+import { loadpageSection } from "../js/utils.mjs";
+
+let partialFilePath = "../partials";
 
 const cartCollection = [];
 const topProductList = [];
@@ -39,6 +42,8 @@ export async function createProductPage(productId) {
   let productPageContainer = document.querySelector(".product-detail");
   if (productPageContainer) {
     productPageContainer.innerHTML = newProductPage;
+
+
     let addToCartButton = document.getElementById("addToCart");
     if (addToCartButton) {
       addToCartButton.addEventListener("click", addToCartHandler);
@@ -48,6 +53,15 @@ export async function createProductPage(productId) {
   } else {
     console.error("Could not find .product-detail for adding product detial for the product page.");
   }
+  
+  const headerContainer = document.querySelector(".headerForPage");
+  const footerContainer = document.querySelector(".footerForPage");
+  if (!headerContainer || !footerContainer) {
+    console.error("Header or footer container not found.");
+    return;
+  }
+    await loadpageSection(0, partialFilePath)
+    await loadpageSection(1, partialFilePath)
 }
 
 export function loadTopProducts(itemList) {
@@ -100,9 +114,11 @@ export function getProducts(dataSource) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  let urlParams = new URLSearchParams(window.location.search);
-  let productId = urlParams.get("id");
-  if (productId) {
-    createProductPage(productId);
+  if (window.location.pathname.includes("product.html")) {
+    let urlParams = new URLSearchParams(window.location.search);
+    let productId = urlParams.get("id");
+    if (productId) {
+      createProductPage(productId);
+    }
   }
 });
