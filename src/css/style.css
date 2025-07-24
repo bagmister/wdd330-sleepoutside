@@ -262,6 +262,20 @@ footer {
   padding: 1em;
 }
 
+
+.remove-item {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  font-weight: bold;
+  color: red;
+  cursor: pointer;
+}
+
+.cart-card {
+  position: relative;
+}
+
 /* .product-category-list {
   display: flex;
   flex-direction: row;

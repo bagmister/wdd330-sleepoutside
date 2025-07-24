@@ -51,7 +51,6 @@ async function createProductPage(productId, category) {
   if (productPageContainer) {
     productPageContainer.innerHTML = newProductPage;
 
-
     let addToCartButton = document.getElementById("addToCart");
     if (addToCartButton) {
       addToCartButton.addEventListener("click", addToCartHandler);
@@ -59,23 +58,68 @@ async function createProductPage(productId, category) {
       console.error("Could not find #addToCart button.");
     }
   } else {
-    console.error("Could not find .product-detail for adding product detial for the product page.");
+    console.error(
+      "Could not find .product-detail for adding product detial for the product page.",
+    );
   }
 
+  const headerContainer = document.querySelector(".headerForPage");
+  const footerContainer = document.querySelector(".footerForPage");
   if (!headerContainer || !footerContainer) {
     console.error("Header or footer container not found.");
     return;
+  }
+  await loadpageSection(0, partialFilePath);
+  await loadpageSection(1, partialFilePath);
+}
+
+export function loadTopProducts(itemList) {
+  let productList = [];
+
+  itemList.forEach((item) => {
+    if (item.Id === "989CG" || item.Id === "880RT") {
+      return;
+    }
+    let newProduct = `
+    <li class="product-card" data-id="${item.Id}">
+      <a href="./product_pages/product.html?id=${item.Id}">
+        <img src="${item.ImageIndex}" alt="${item.Alt}" />
+        <h3 class="card__brand">${item.Brand.Name}</h3>
+        <h2 class="card__name">${item.NameWithoutBrand}</h2>
+        <p class="product-card__price">$${item.FinalPrice}</p>
+        <div class="product-detail__add">
+          <button class="addToCartButton" data-id="${item.Id}">Add to Cart</button>
+        </div>
+      </a>
+    </li>
+    `;
+    productList.push(newProduct);
+  });
+
+  const productListContainer = document.querySelector(".product-list");
+  if (productListContainer) {
+    productListContainer.innerHTML = productList.join("");
+  } else {
+    console.log("Could not find .product-list to update.");
+  }
+
+  if (productListContainer) {
+    productListContainer.addEventListener("click", (e) => {
+      if (e.target && e.target.classList.contains("addToCartButton")) {
+        let productId = e.target.dataset.id;
+        addToCartHandler({ target: { dataset: { id: productId } } });
+      }
+    });
   }
 }
 
 export function getProducts(dataSource) {
   let productArray = [];
-  dataSource.forEach(item => {
+  dataSource.forEach((item) => {
     productArray.push(item);
   });
   return productArray;
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname.includes("product.html")) {
