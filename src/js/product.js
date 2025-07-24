@@ -1,5 +1,4 @@
-import { setLocalStorage } from "../js/utils.mjs";
-import { loadpageSection } from "../js/utils.mjs";
+import { setLocalStorage, loadpageSection } from "../js/utils.mjs";
 import ProductData from './ProductData.mjs';
 
 let partialFilePath = "./public/partials";
@@ -63,14 +62,10 @@ async function createProductPage(productId, category) {
     );
   }
 
-  const headerContainer = document.querySelector(".headerForPage");
-  const footerContainer = document.querySelector(".footerForPage");
   if (!headerContainer || !footerContainer) {
     console.error("Header or footer container not found.");
     return;
   }
-  await loadpageSection(0, partialFilePath);
-  await loadpageSection(1, partialFilePath);
 }
 
 export function loadTopProducts(itemList) {
