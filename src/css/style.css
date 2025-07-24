@@ -261,3 +261,11 @@ footer {
   font-size: var(--small-font);
   padding: 1em;
 }
+
+/* .product-category-list {
+  display: flex;
+  flex-direction: row;
+  max-width: fit-content;
+  justify-items: center;
+
+} */
