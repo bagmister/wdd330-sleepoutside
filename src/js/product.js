@@ -43,7 +43,6 @@ export async function createProductPage(productId) {
   if (productPageContainer) {
     productPageContainer.innerHTML = newProductPage;
 
-
     let addToCartButton = document.getElementById("addToCart");
     if (addToCartButton) {
       addToCartButton.addEventListener("click", addToCartHandler);
@@ -51,25 +50,27 @@ export async function createProductPage(productId) {
       console.error("Could not find #addToCart button.");
     }
   } else {
-    console.error("Could not find .product-detail for adding product detial for the product page.");
+    console.error(
+      "Could not find .product-detail for adding product detial for the product page.",
+    );
   }
-  
+
   const headerContainer = document.querySelector(".headerForPage");
   const footerContainer = document.querySelector(".footerForPage");
   if (!headerContainer || !footerContainer) {
     console.error("Header or footer container not found.");
     return;
   }
-    await loadpageSection(0, partialFilePath)
-    await loadpageSection(1, partialFilePath)
+  await loadpageSection(0, partialFilePath);
+  await loadpageSection(1, partialFilePath);
 }
 
 export function loadTopProducts(itemList) {
   let productList = [];
 
-  itemList.forEach(item => {
+  itemList.forEach((item) => {
     if (item.Id === "989CG" || item.Id === "880RT") {
-      return
+      return;
     }
     let newProduct = `
     <li class="product-card" data-id="${item.Id}">
@@ -106,12 +107,11 @@ export function loadTopProducts(itemList) {
 
 export function getProducts(dataSource) {
   let productArray = [];
-  dataSource.forEach(item => {
+  dataSource.forEach((item) => {
     productArray.push(item);
   });
   return productArray;
 }
-
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname.includes("product.html")) {
