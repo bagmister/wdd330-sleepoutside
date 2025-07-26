@@ -281,4 +281,11 @@ footer {
   flex-direction: row;
   max-width: fit-content;
   justify-content: space-between;
+  padding-bottom: 5rem;
+  padding-top: 1rem;
+}
+
+.product-category-list h3 {
+  text-align: center;
+  color: black;
 }
