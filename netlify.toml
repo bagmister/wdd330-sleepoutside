@@ -7,3 +7,7 @@
   to = "https://cdn.segment.com/:splat"
   status = 200
   force = true
+ [[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "script-src 'self' https://cdn.segment.com; connect-src 'self' https://api.segment.io https://cdn.segment.com;"
