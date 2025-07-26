@@ -1,6 +1,6 @@
 import { getLocalStorage, setLocalStorage, loadpageSection } from "./utils.mjs";
 
-const partialFilePath = "../public/partials";
+const partialFilePath = "/partials";
 
 function renderCartContents() {
   const cartItems = getLocalStorage("so-cart") || [];

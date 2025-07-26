@@ -1,6 +1,6 @@
 import { loadpageSection } from "./utils.mjs";
 
-const partialFilePath = "../public/partials";
+const partialFilePath = "/partials";
 
 document.addEventListener("DOMContentLoaded", () => {
   loadpageSection(0, partialFilePath);

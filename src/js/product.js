@@ -1,7 +1,7 @@
 import { setLocalStorage, getLocalStorage, loadpageSection } from "../js/utils.mjs";
 import ProductData from './ProductData.mjs';
 
-const partialFilePath = "../public/partials";
+const partialFilePath = "/partials";
 const headerContainer = document.querySelector(".headerForPage");
 const footerContainer = document.querySelector(".footerForPage");
 
