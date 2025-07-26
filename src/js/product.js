@@ -1,108 +1,111 @@
-import { setLocalStorage, loadpageSection } from "../js/utils.mjs";
+import { setLocalStorage, getLocalStorage, loadpageSection } from "../js/utils.mjs";
 import ProductData from './ProductData.mjs';
 
-let partialFilePath = "./public/partials";
-
+const partialFilePath = "../public/partials";
 const headerContainer = document.querySelector(".headerForPage");
 const footerContainer = document.querySelector(".footerForPage");
-const cartCollection = [];
-const topProductList = [];
-
-
-function addProductToCart(product) {
-  cartCollection.push(product);
-  setLocalStorage("so-cart", cartCollection);
-}
 
 async function addToCartHandler(e) {
-  let product = await dataSource.findProductById(e.target.dataset.id);
+  const productId = e.target.dataset.id;
+  const category = e.target.dataset.category || new URLSearchParams(window.location.search).get("category");
+  if (!category) {
+    console.error("No category provided for addToCartHandler");
+    return;
+  }
+  const dataSource = new ProductData(category);
+  const product = await dataSource.findProductById(productId);
+  if (!product) {
+    console.error(`Product with ID ${productId} not found in category ${category}`);
+    return;
+  }
+  product.Category = category;
   addProductToCart(product);
 }
 
+function addProductToCart(product) {
+  let cartCollection = getLocalStorage("so-cart") || [];
+  cartCollection.push(product);
+  setLocalStorage("so-cart", cartCollection);
+  console.log("Cart updated:", cartCollection);
+}
+
 async function createProductPage(productId, category) {
+  const mainContainer = document.querySelector("main.divider");
+  if (mainContainer) {
+    mainContainer.innerHTML = '<div class="product-detail"></div>';
+  }
   headerContainer.innerHTML = "";
   footerContainer.innerHTML = "";
-  await loadpageSection(0, partialFilePath)
-  await loadpageSection(1, partialFilePath)
-  console.log("the category: ", category)
-  console.log("the productId: ", productId)
-  let dataSource = new ProductData(category);
-  console.log("dataSource used for create product page:", dataSource);
-  let product = await dataSource.findProductById(productId);
-  console.log("Product:", product);
+
+  await loadpageSection(0, partialFilePath).then(() => {
+    const cartIcon = document.querySelector(".cart-icon");
+    if (cartIcon) {
+      cartIcon.addEventListener("click", () => {
+        window.location.href = "../cart/index.html";
+      });
+    }
+  });
+  await loadpageSection(1, partialFilePath);
+
+  const dataSource = new ProductData(category);
+  const product = await dataSource.findProductById(productId);
   if (!product) {
     console.error("Product not found for ID:", productId);
     return;
   }
-  console.log("product we will use: ", product)
+  product.Category = category;
+
   let newProductPage = `
-    <h3>${product.Brand.Name[0]}</h3>
-    <h2 class="divider">${product.NameWithoutBrand}</h2>
-    <img class="divider" src="../${product.Images.PrimaryMedium[0]}" alt="${product.Alt}" />
-    <p class="product-card__price">$${product.FinalPrice}</p>
-    <p class="product__color">${product.Colors[0].ColorName}</p>
-    <p class="product__description">${product.DescriptionHtmlSimple}</p>
+    <h3>${product.Brand?.Name || 'Unknown Brand'}</h3>
+    <h2 class="divider">${product.NameWithoutBrand || product.Name}</h2>
+    <img class="divider" src="${product.Images?.PrimaryMedium || ''}" alt="${product.Name || 'Product image'}" />
+    <p class="product-card__price">$${product.FinalPrice?.toFixed(2) || 'N/A'}</p>
+    <p class="product__color">${product.Colors?.[0]?.ColorName || 'N/A'}</p>
+    <p class="product__description">${product.DescriptionHtmlSimple || 'No description available'}</p>
     <div class="product-detail__add">
-      <button id="addToCart" data-id="${product.Id}">Add to Cart</button>
+      <button id="addToCart" data-id="${product.Id}" data-category="${category}">Add to Cart</button>
     </div>`;
 
-  let productPageContainer = document.querySelector(".product-detail");
+  const productPageContainer = document.querySelector(".product-detail");
   if (productPageContainer) {
     productPageContainer.innerHTML = newProductPage;
-
-    let addToCartButton = document.getElementById("addToCart");
+    const addToCartButton = document.getElementById("addToCart");
     if (addToCartButton) {
       addToCartButton.addEventListener("click", addToCartHandler);
-    } else {
-      console.error("Could not find #addToCart button.");
     }
-  } else {
-    console.error(
-      "Could not find .product-detail for adding product detial for the product page.",
-    );
-  }
-
-  if (!headerContainer || !footerContainer) {
-    console.error("Header or footer container not found.");
-    return;
   }
 }
 
 export function loadTopProducts(itemList) {
-  let productList = [];
-
+  const productList = [];
   itemList.forEach((item) => {
     if (item.Id === "989CG" || item.Id === "880RT") {
       return;
     }
     let newProduct = `
     <li class="product-card" data-id="${item.Id}">
-      <a href="./product_pages/product.html?id=${item.Id}">
-        <img src="${item.ImageIndex}" alt="${item.Alt}" />
-        <h3 class="card__brand">${item.Brand.Name}</h3>
-        <h2 class="card__name">${item.NameWithoutBrand}</h2>
-        <p class="product-card__price">$${item.FinalPrice}</p>
+      <a href="../product_pages/product.html?id=${item.Id}&category=${item.Category}">
+        <img src="${item.Images?.PrimaryMedium || ''}" alt="${item.Name || 'Product image'}" />
+        <h3 class="card__brand">${item.Brand?.Name || 'Unknown Brand'}</h3>
+        <h2 class="card__name">${item.NameWithoutBrand || item.Name}</h2>
+        <p class="product-card__price">$${item.FinalPrice?.toFixed(2) || 'N/A'}</p>
         <div class="product-detail__add">
-          <button class="addToCartButton" data-id="${item.Id}">Add to Cart</button>
+          <button class="addToCartButton" data-id="${item.Id}" data-category="${item.Category}">Add to Cart</button>
         </div>
       </a>
-    </li>
-    `;
+    </li>`;
     productList.push(newProduct);
   });
 
-  const productListContainer = document.querySelector(".product-list");
+  const productListContainer = document.querySelector(".top-product-list");
   if (productListContainer) {
     productListContainer.innerHTML = productList.join("");
-  } else {
-    console.log("Could not find .product-list to update.");
   }
 
   if (productListContainer) {
     productListContainer.addEventListener("click", (e) => {
       if (e.target && e.target.classList.contains("addToCartButton")) {
-        let productId = e.target.dataset.id;
-        addToCartHandler({ target: { dataset: { id: productId } } });
+        addToCartHandler(e);
       }
     });
   }
@@ -118,10 +121,10 @@ export function getProducts(dataSource) {
 
 document.addEventListener("DOMContentLoaded", () => {
   if (window.location.pathname.includes("product.html")) {
-    let urlParams = new URLSearchParams(window.location.search);
-    let productId = urlParams.get("id");
-    let category = urlParams.get("category")
-    if (productId) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get("id");
+    const category = urlParams.get("category");
+    if (productId && category) {
       createProductPage(productId, category);
     }
   }
