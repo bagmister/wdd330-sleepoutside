@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig({
   root: "src/",
-
+  base: "/", // Explicitly set base to root
   build: {
     outDir: "../dist",
     rollupOptions: {
@@ -12,7 +12,7 @@ export default defineConfig({
         cart: resolve(__dirname, "src/cart/index.html"),
         checkout: resolve(__dirname, "src/checkout/index.html"),
         productPage: resolve(__dirname, "src/product_pages/product.html"),
-        productListing: resolve(__dirname, "src/product_listing/productListing.html"),
+        productListing: resolve(__dirname, "src/product_listing/productListing.html"), // Added
       },
     },
   },
