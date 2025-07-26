@@ -14,16 +14,6 @@ export default defineConfig({
         productPage: resolve(
           __dirname,
           "src/product_pages/product.html",
-          "src/product_pages/product.html",
-        ),
-        product2: resolve(__dirname, "src/product_pages/product.html"),
-        product3: resolve(
-          __dirname,
-          "src/product_pages/product.html",
-        ),
-        product4: resolve(
-          __dirname,
-          "src/product_pages/product.html",
         ),
       },
     },
