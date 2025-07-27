@@ -17,9 +17,9 @@ function renderCartContents() {
     return;
   }
 
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+  const consolidatedItems = combineDuplicates(cartItems);
+  const htmlItems = consolidatedItems.map((item) => cartItemTemplate(item));
   productList.innerHTML = htmlItems.join("");
-
   attachRemoveListeners();
 }
 
@@ -33,7 +33,7 @@ function cartItemTemplate(item) {
       <h2 class="card__name">${item.Name || 'Unknown Product'}</h2>
     </a>
     <p class="cart-card__color">${item.Colors?.[0]?.ColorName || 'N/A'}</p>
-    <p class="cart-card__quantity">qty: 1</p>
+    <p class="cart-card__quantity">qty: ${item.count || 1}</p>
     <p class="cart-card__price">$${item.FinalPrice?.toFixed(2) || 'N/A'}</p>
   </li>`;
 }
@@ -48,14 +48,30 @@ function attachRemoveListeners() {
   });
 }
 
+function combineDuplicates(cartItems) {
+  const itemMap = new Map();
+  
+  cartItems.forEach(item => {
+    if (itemMap.has(item.Id)) {
+      const existingItem = itemMap.get(item.Id);
+      existingItem.count = (existingItem.count || 1) + (item.count || 1);
+    } else {
+      itemMap.set(item.Id, { ...item, count: item.count || 1 });
+    }
+  });
+
+  const consolidatedItems = Array.from(itemMap.values());
+  
+  setLocalStorage("so-cart", consolidatedItems);
+  
+  return consolidatedItems;
+}
+
 function removeItemFromCart(idToRemove) {
   let cartItems = getLocalStorage("so-cart") || [];
-  const index = cartItems.findIndex((item) => item.Id === idToRemove);
-  if (index !== -1) {
-    cartItems.splice(index, 1);
-    setLocalStorage("so-cart", cartItems);
-    renderCartContents();
-  }
+  cartItems = cartItems.filter((item) => item.Id !== idToRemove);
+  setLocalStorage("so-cart", cartItems);
+  renderCartContents();
 }
 
 document.addEventListener("DOMContentLoaded", () => {
