@@ -12,7 +12,8 @@ function renderCartContents() {
     return;
   }
 
-  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
+  const consolidatedItems = combineDuplicates(cartItems);
+  const htmlItems = consolidatedItems.map((item) => cartItemTemplate(item));
   productList.innerHTML = htmlItems.join("");
 
   attachRemoveListeners(); // Set up remove buttons
@@ -47,7 +48,7 @@ function attachRemoveListeners() {
 
 function combineDuplicates(cartItems) {
   const itemMap = new Map();
-  
+
   cartItems.forEach(item => {
     if (itemMap.has(item.Id)) {
       const existingItem = itemMap.get(item.Id);
@@ -58,9 +59,9 @@ function combineDuplicates(cartItems) {
   });
 
   const consolidatedItems = Array.from(itemMap.values());
-  
+
   setLocalStorage("so-cart", consolidatedItems);
-  
+
   return consolidatedItems;
 }
 
