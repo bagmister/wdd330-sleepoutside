@@ -3,24 +3,21 @@ import { getLocalStorage, setLocalStorage, loadpageSection } from "./utils.mjs";
 const partialFilePath = "/partials";
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart") || [];
-  console.log("Cart items from localStorage:", cartItems);
+  const cartItems = getLocalStorage("so-cart");
   const productList = document.querySelector(".product-list");
 
-  if (!productList) {
-    console.error("Could not find .product-list container.");
-    return;
-  }
-
   if (!cartItems || cartItems.length === 0) {
-    productList.innerHTML = "<p>No items in cart</p>";
+    productList.innerHTML = "No items in cart";
+    document.querySelector("#cart-total").textContent = "Total: $0.00";
     return;
   }
 
-  const consolidatedItems = combineDuplicates(cartItems);
-  const htmlItems = consolidatedItems.map((item) => cartItemTemplate(item));
+  const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   productList.innerHTML = htmlItems.join("");
-  attachRemoveListeners();
+
+  attachRemoveListeners(); // Set up remove buttons
+
+  updateCartTotal(cartItems); // New function to calculate and display total
 }
 
 function cartItemTemplate(item) {
@@ -95,3 +92,14 @@ document.addEventListener("DOMContentLoaded", () => {
   loadpageSection(1, partialFilePath);
   renderCartContents();
 });
+
+function updateCartTotal(cartItems) {
+  let total = 0;
+
+  cartItems.forEach(item => {
+    const quantity = item.Quantity || 1;
+    total += item.FinalPrice * quantity;
+  });
+
+  document.querySelector("#cart-total").textContent = `Total: $${total.toFixed(2)}`;
+}
