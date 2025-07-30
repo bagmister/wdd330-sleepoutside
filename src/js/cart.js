@@ -104,3 +104,9 @@ function updateCartTotal(cartItems) {
 
   document.querySelector("#cart-total").textContent = `Total: $${total.toFixed(2)}`;
 }
+
+
+  let cartCollection = getLocalStorage("so-cart") || [];
+  document.getElementById("checkout-button").addEventListener("click", () => {
+  window.location.href = "../checkout/index.html"
+})
