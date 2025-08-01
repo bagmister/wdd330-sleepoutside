@@ -8,7 +8,7 @@ function convertToJson(res) {
   }
 }
 
-export default class ProductData {
+export default class ExternalServices {
   constructor(category) {
     this.category = category;
   }
@@ -20,7 +20,7 @@ export default class ProductData {
   }
   async findProductById(id) {
     const products = await this.getData(this.category);
-    console.log("products to load: ",products)
+    console.log("products to load: ", products)
     let value = products.find((item) => item.Id === id);
     return value;
   }

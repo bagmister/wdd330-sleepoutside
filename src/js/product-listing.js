@@ -1,4 +1,4 @@
-import ProductData from './ProductData.mjs';
+import ExternalServices from './ExternalServices.mjs';
 import { loadpageSection, getLocalStorage, setLocalStorage } from "./utils.mjs";
 
 const partialFilePath = "/partials";
@@ -12,7 +12,7 @@ async function addToCartHandler(e) {
     console.error("No category provided for addToCartHandler");
     return;
   }
-  const dataSource = new ProductData(category);
+  const dataSource = new ExternalServices(category);
   const product = await dataSource.findProductById(productId);
   if (!product) {
     console.error(`Product with ID ${productId} not found in category ${category}`);
@@ -69,7 +69,7 @@ async function createProductListingPage(productCategoryId) {
     return;
   }
 
-  const dataSource = new ProductData(category);
+  const dataSource = new ExternalServices(category);
   const productList = await dataSource.getData(category);
   console.log("Products fetched for category:", category, productList);
 

@@ -1,5 +1,5 @@
 import { setLocalStorage, getLocalStorage, loadpageSection } from "../js/utils.mjs";
-import ProductData from './ProductData.mjs';
+import ExternalServices from './ExternalServices.mjs';
 
 const partialFilePath = "/partials";
 const headerContainer = document.querySelector(".headerForPage");
@@ -12,7 +12,7 @@ async function addToCartHandler(e) {
     console.error("No category provided for addToCartHandler");
     return;
   }
-  const dataSource = new ProductData(category);
+  const dataSource = new ExternalServices(category);
   const product = await dataSource.findProductById(productId);
   if (!product) {
     console.error(`Product with ID ${productId} not found in category ${category}`);
@@ -47,7 +47,7 @@ async function createProductPage(productId, category) {
   });
   await loadpageSection(1, partialFilePath);
 
-  const dataSource = new ProductData(category);
+  const dataSource = new ExternalServices(category);
   const product = await dataSource.findProductById(productId);
   if (!product) {
     console.error("Product not found for ID:", productId);
