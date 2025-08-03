@@ -36,7 +36,7 @@
       <input name="street" type="text" placeholder="Street Address" required />
       <input name="city" type="text" placeholder="City" required />
       <input name="state" type="text" placeholder="State" required />
-      <input name="zip" type="text" placeholder="ZIP Code" required />
+      <input id="zip" name="zip" type="text" placeholder="ZIP Code" required />
 
       <h2>Payment Info</h2>
       <input name="cardNumber" type="text" placeholder="Card Number" required />
@@ -45,13 +45,15 @@
 
       <button type="submit" id="checkoutSubmit">Place order</button>
     </form>
+  
+  <section class="checkout-summary">
+      <h2>Order Summary</h2>
+      <div id="sub-total"></div>
+      <div id="tax-total"></div>
+      <div id="shipping-total"></div>
+      <div id="finalCheckout-total"></div>
+  </section>
 
-    <div id="order-summary"></div>
-
-  <div id="sub-total"></div>
-  <div id="tax-total"></div>
-  <div id="shipping-total"></div>
-  <div id="finalCheckout-total"></div>
   <footer>
     <div class="footerForPage"></div>
   </footer>
