@@ -1,10 +1,13 @@
 const baseURL = import.meta.env.VITE_SERVER_URL
 
-function convertToJson(res) {
-  if (res.ok) {
-    return res.json();
-  } else {
-    throw new Error("Bad Response");
+async function convertToJson(res) {
+  if (!res.ok) {
+    throw new Error(`API request failed with status ${res.status}: ${res.statusText}`);
+  }
+  try {
+    return await res.json();
+  } catch (error) {
+    throw new Error(`Failed to parse JSON response: ${error.message}`);
   }
 }
 

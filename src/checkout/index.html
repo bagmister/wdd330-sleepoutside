@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta http-equiv="Content-Security-Policy" content="script-src 'self' https://cdn.segment.com;">
-  <title>Sleep Outside | Cart</title>
+  <title>Sleep Outside | Checkout</title>
   <link rel="stylesheet" href="../css/style.css" />
   <script type="module" src="../js/cart.js"></script>
   <script type="module" src="../js/utils.mjs"></script>
@@ -15,7 +15,9 @@
   <header class="divider">
     <div class="headerForPage"></div>
   </header>
-
+  <div class="alert">
+  <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+  </div>
   <main class="divider">
     <section class="cart">
       <h2>My Cart</h2>
@@ -41,8 +43,7 @@
       <input name="expiration" type="text" placeholder="MM/YY" required />
       <input name="code" type="password" placeholder="CVV" required />
 
-      
-      <button type="submit">Place order</button>
+      <button type="submit" id="checkoutSubmit">Place order</button>
     </form>
 
     <div id="order-summary"></div>
