@@ -80,4 +80,62 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   loadpageSection(1, partialFilePath);
+  if (localStorage.getItem('subscribed') !== 'true') {
+    showModal();
+  }
+});
+
+function showModal() {
+  const modal = document.querySelector('.modal');
+  modal.classList.add('show');
+  modal.querySelector('.email-input');
+}
+
+function hideModal() {
+  document.querySelector('.modal').classList.remove('show');
+}
+
+document.querySelector('.modal-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const emailInput = document.querySelector('.email-input');
+  const email = emailInput.value;
+  const errorMessage = document.querySelector('.error-message');
+  const successMessage = document.querySelector('.success-message');
+
+  errorMessage.style.display = 'none';
+  successMessage.style.display = 'none';
+
+  if (email) {
+    localStorage.setItem('subscribed', 'true');
+    successMessage.style.display = 'block';
+    setTimeout(hideModal, 2000);
+  } else {
+    errorMessage.style.display = 'block';
+    emailInput.focus();
+  }
+});
+
+document.querySelector('.close-button').addEventListener('click', hideModal);
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && document.querySelector('.modal.show')) {
+    hideModal();
+  }
+});
+
+document.querySelector('.modal').addEventListener('keydown', (event) => {
+  if (event.key === 'Tab' && document.querySelector('.modal.show')) {
+    const focusableElements = document.querySelectorAll(
+      '.modal.show .email-input, .modal.show button'
+    );
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+
+    if (event.shiftKey && document.activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+    } else if (!event.shiftKey && document.activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  }
 });
