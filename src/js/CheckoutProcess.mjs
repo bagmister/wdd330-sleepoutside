@@ -65,12 +65,6 @@ displayItemSubtotal() {
   }
 }
 
-  displayOrderTotals() {
-    document.querySelector("#tax-total").innerText = `Tax: $${this.taxAmount.toFixed(2)}`;
-    document.querySelector("#shipping-total").innerText = `Shipping: $${this.shipping.toFixed(2)}`;
-    document.querySelector("#finalCheckout-total").innerText = `Total: $${this.orderTotal.toFixed(2)}`;
-  }
-
 
 
   prepareItems() {
