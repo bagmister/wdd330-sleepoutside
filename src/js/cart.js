@@ -110,3 +110,15 @@ function updateCartTotal(cartItems) {
   document.getElementById("checkout-button").addEventListener("click", () => {
   window.location.href = "../checkout/index.html"
 })
+
+
+function animateCartIcon() {
+  const cart = document.getElementById('cart-icon');
+  if (cart) {
+    cart.classList.remove('animate');
+    void cart.offsetWidth;
+    cart.classList.add('animate');
+  }
+}
+
+animateCartIcon();
